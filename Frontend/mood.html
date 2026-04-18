@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mood Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="MindSpace Mood Tracker - Track your daily emotional wellbeing and discover patterns to improve your mental health.">
+    <meta name="keywords" content="mood tracker, emotion tracking, mental health, student wellness, daily mood log">
+    <meta name="author" content="MindSpace Warriors">
+    <meta name="robots" content="noindex, nofollow"> <!-- Protected page -->
+    <meta name="theme-color" content="#6A0DAD">
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/ico.png">
+    <link rel="manifest" href="images/favicon/site.webmanifest">
+    
+    <!-- Mobile App Capability -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Authentication Required -->
+    <meta name="auth-required" content="true">
+    
+    <title>MindSpace - Mood Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/mood.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+
+
+
+</head>
+
+<body>
+<div class="notifications-container" id="notifications-container"></div>
+<!-- ================= HEADER ================= -->
+<header>
+    <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>MindSpace</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="AI-support.html">AI-Support</a></li>
+                    <li><a href="mental-home.html">Mental Health</a></li>
+                    <li><a href="appointment.html">Appointment</a></li>
+                    <li><a href="#mood" class="active">Mood Tracker</a></li>
+                </ul>
+            </nav>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div id="mood-tracker-container">
+                    <button class="mood-tracker-btn" id="mood-tracker-btn">
+                        <i class="fas fa-chart-line"></i> Track Your Mood
+                    </button>
+                </div>
+                
+                <!-- User profile dropdown -->
+                <div class="user-profile-dropdown">
+                    <div class="profile-trigger" id="profile-trigger">
+                        <div class="avatar-circle" id="header-avatar">U</div>
+                        <span id="header-username">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#setting.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logout-btn" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+</header>
+
+ <section id="mood" class="dashboard-container">
+        <div class="container">
+            
+            <!-- AI Mood Detection Section -->
+            <div class="mood-detection-section" style="background: url('images/ai-mood.jpg') center center/cover no-repeat, #222;">
+                <div class="mood-detect-bg-overlay" style="background: rgba(20, 28, 60, 0.436); backdrop-filter: blur(0px);"></div>
+                <div class="ai-mood-detect-flex">
+                    <div class="ai-mood-detect-left">
+                        <h2>AI-POWERED <span style="color:#fff; font-weight:900;">MOOD DETECTION</span></h2>
+                        <p>Track your daily emotional wellbeing through AI-powered facial expression analysis or manual mood selection.
+                            <br>Track your mood instantly using advanced AI technology.</p>
+                        <button id="captureBtn" class="btn-primary" style="margin-top:20px;">Check Mood Now</button>
+                    </div>
+                    <div class="ai-mood-detect-right">
+                        <div class="video-container" style="position:relative;">
+                            <video id="video" autoplay playsinline></video>
+                            <canvas id="canvas"></canvas>
+                            <div class="countdown" id="countdown"></div>
+                        </div>
+                        <div id="result"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recommendations Section -->
+            <div class="mood-recommendations" id="mood-recommendations">
+                <h3>Recommendations for You</h3>
+                <div id="recommendation-content">
+                    <p style="color:#888;">Resources (quotes, posters, videos, audios) will appear here based on your detected mood.</p>
+                </div>
+            </div>
+            
+            <!-- Mood History Section with Date Filter -->
+            <div class="mood-history-section">
+                <div class="mood-chart-container">
+                    <h3>Your Mood History</h3>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <label for="history-date-filter" style="font-weight: 500;">Show from:</label>
+                        <input type="date" id="history-date-filter" max="" style="padding: 4px 8px; border-radius: 5px; border: 1px solid #ccc;">
+                        <span style="font-size: 12px; color: #888;">(Last 7 days only)</span>
+                    </div>
+                    <p>Track how your mood has changed over the past 7 days.</p>
+                    <div class="chart-container">
+                        <canvas id="mood-history-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="mood-history-list">
+                    <h3 class="history-title">Recent Mood Entries</h3>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+            
+            <!-- Manual Mood Selection Section -->
+            <div class="mood-container">
+                <h2 style="text-align: center; margin-bottom: 20px;">Manual Mood Selection</h2>
+                
+                <div class="mood-options">
+                    <div class="mood-option" data-mood="3" data-label="Happy">
+                        <div class="mood-emoji">😄</div>
+                        <div class="mood-label">Happy</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="4" data-label="Neutral">
+                        <div class="mood-emoji">😐</div>
+                        <div class="mood-label">Neutral</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="5" data-label="Sad">
+                        <div class="mood-emoji">😢</div>
+                        <div class="mood-label">Sad</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="0" data-label="Angry">
+                        <div class="mood-emoji">😠</div>
+                        <div class="mood-label">Angry</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="6" data-label="Surprise">
+                        <div class="mood-emoji">😲</div>
+                        <div class="mood-label">Surprise</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="2" data-label="Fear">
+                        <div class="mood-emoji">😨</div>
+                        <div class="mood-label">Fear</div>
+                    </div>
+                    
+                    <div class="mood-option" data-mood="1" data-label="Disgust">
+                        <div class="mood-emoji">🤢</div>
+                        <div class="mood-label">Disgust</div>
+                    </div>
+                </div>
+                
+                <div class="mood-notes">
+                    <textarea placeholder="Add any notes about how you're feeling today (optional)..." id="mood-notes"></textarea>
+                </div>
+                
+                <button class="btn-primary mood-submit-btn" id="save-manual-mood-btn">Save Manual Mood</button>
+            </div>
+            
+            <!-- Instructions moved to end of page -->
+            <div class="instructions">
+                <img src="images/mood.jpg" alt="AI Mood Detection Instructions" class="instructions-img" />
+                <div class="instructions-content">
+                    <h3>How to use AI Mood Detection:</h3>
+                    <ul>
+                        <li>Position yourself in front of the camera with good lighting</li>
+                        <li>Click "Check Mood Now." to start a 5-second countdown</li>
+                        <li>Maintain a natural facial expression during the countdown</li>
+                        <li>The AI will analyze your expression and record your mood</li>
+                        <li>Your mood history will be updated on the chart below</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column">
+                    <div class="logo">
+                        <i class="fas fa-brain"></i>
+                        <h2>MindSpace</h2>
+                    </div>
+                    <p>Supporting mental health and wellbeing across people in India.</p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="mood.html">Track Mood</a></li>
+                        <li><a href="mental-home.html">Check Mental Health</a></li>
+                        <li><a href="AI-support.html">AI Support</a></li>
+                        <li><a href="appointment.html">Book Appointments</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@mindspace.edu</li>
+                        <li><i class="fas fa-phone"></i> Helpline: 1234567899</li>
+                        <li><i class="fas fa-ambulance"></i> Emergency: 100</li>
+                        <li><i class="fas fa-map-marker-alt"></i> India</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Soul Space. All rights reserved.<a href="team.html">Soul Space Warriors</a></p>
+                <div class="footer-links">
+                    <a href="policy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/mood.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Get user data from localStorage
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Update user information in the UI
+            if (userData) {
+                const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+                const initials = ((userData.firstName || '').charAt(0) + (userData.lastName || '').charAt(0)).toUpperCase();
+                
+                // Update header profile dropdown
+                document.getElementById('header-username').textContent = userData.firstName || 'User';
+                document.getElementById('header-avatar').textContent = initials || 'U';
+            }
+            
+            // Toggle profile dropdown
+            const profileTrigger = document.getElementById('profile-trigger');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileTrigger.addEventListener('click', function() {
+                profileDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!profileTrigger.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    profileDropdown.classList.remove('active');
+                }
+            });
+            
+            // Handle logout
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Clear authentication data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                
+                // Show success notification
+                showSuccess('Logged out successfully!');
+                
+                // Redirect to home page after short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            });
+
+        });
+
+    </script>
+</body>
+</html>
+
+

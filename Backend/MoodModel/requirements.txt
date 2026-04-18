@@ -1,0 +1,9 @@
+# MoodModel Flask service: DeepFace + RetinaFace (lazy-loaded on first request).
+# First emotion request after install may take minutes (downloads weights, TF init).
+
+flask>=3.0.0
+flask-cors>=4.0.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+deepface>=0.0.90
+tensorflow>=2.15.0

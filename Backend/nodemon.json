@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "server.js",
+    "controllers",
+    "routes",
+    "models",
+    "middleware",
+    "utils"
+  ],
+  "ext": "js,mjs,cjs,json",
+  "ignore": [
+    "MoodModel/**",
+    "node_modules/**",
+    "*.log"
+  ]
+}

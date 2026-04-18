@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="SoulSpace - A comprehensive mental health platform for people who are affected by Mental health issues. Access resources, support, and personalized mental wellness tools.">
+    <meta name="keywords" content="mental health, student wellness, counseling, mindfulness, mental health support, education, stress management, anxiety, depression, student resources">
+    <meta name="author" content="SoulSpace Warriors">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6A0DAD">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/ico.png">
+    
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mind-space-beryl.vercel.app/">
+    <meta property="og:title" content="SoulSpace - Digital Mental Health Support">
+    <meta property="og:description" content="A safe, confidential space for students to access mental health resources, counseling services, and peer support.">
+    <meta property="og:image" content="https://mind-space-beryl.vercel.app/images/screenshots/home.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mind-space-beryl.vercel.app/">
+    <meta property="twitter:title" content="SoulSpace - Digital Mental Health Support">
+    <meta property="twitter:description" content="A safe, confidential space for students to access mental health resources, counseling services, and peer support.">
+    <meta property="twitter:image" content="https://mind-space-beryl.vercel.app/images/screenshots/home.png">
+
+    <!-- Mobile App Capability -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- PWA Compatibility -->
+    <link rel="canonical" href="https://mind-space-beryl.vercel.app/">
+    
+    <title>Soul Space - Digital Mental Health Support</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Add notification container at the top of the body -->
+    <div class="notifications-container" id="notifications-container"></div>
+    
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Soul Space</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                   <!-- Navigation links will be populated by script.js based on login status -->
+                </ul>
+            </nav>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="mood-tracker-btn">
+                    <i class="fas fa-chart-line"></i> Track Your Mood
+                </button>
+                
+                <!-- Auth buttons container - will be hidden when logged in -->
+                <div class="auth-buttons-container" style="display: none;">
+                    <div class="auth-buttons">
+                        <button class="btn-secondary">Login</button>
+                        <button class="btn-primary">Register</button>
+                    </div>
+                </div>
+                
+                <!-- User profile dropdown - initially hidden, shown when logged in -->
+                <div class="user-profile-dropdown" style="display: none;">
+                    <div class="profile-trigger" id="profile-trigger">
+                        <div class="avatar-circle" id="header-avatar">U</div>
+                        <span id="header-username">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logout-btn" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="fade-in">Your Mental Wellbeing Matters</h1>
+                <p class="fade-in">A safe, confidential space for people to access mental health resources, counseling
+                    services, and peer support - all in one place.</p>
+                <div class="hero-buttons fade-in">
+                    <button class="btn-primary">Get Started</button>
+                    <button class="btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image fade-in">
+                <div class="brain-container">
+                    <img src="./images/five.png" alt="Brain visualization" class="brain-img">
+                    <div class="neon-glow"></div>
+                    <!-- Stars and twinkling elements -->
+                    <div class="stars-container">
+                        <div class="star" style="top: 20%; left: 10%;"></div>
+                        <div class="star" style="top: 15%; left: 80%;"></div>
+                        <div class="star" style="top: 60%; left: 85%;"></div>
+                        <div class="star" style="top: 75%; left: 30%;"></div>
+                        <div class="star" style="top: 40%; left: 50%;"></div>
+                        <div class="star" style="top: 30%; left: 20%;"></div>
+                        <div class="star" style="top: 80%; left: 70%;"></div>
+                        <div class="star" style="top: 50%; left: 15%;"></div>
+                    </div>
+                    <!-- Neural network lines -->
+                    <div class="neural-lines">
+                        <div class="line line-1"></div>
+                        <div class="line line-2"></div>
+                        <div class="line line-3"></div>
+                        <div class="line line-4"></div>
+                        <div class="line line-5"></div>
+                        <div class="line line-6"></div>
+                    </div>
+                    <div class="pulse-circles">
+                        <div class="pulse-circle"></div>
+                        <div class="pulse-circle"></div>
+                        <div class="pulse-circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Soul Space</h2>
+
+            <div class="about-container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Supporting Mental Wellness for Everyone</h3>
+<p>Soul Space is a digital platform designed to help individuals manage stress, anxiety, and emotional challenges in their daily lives.</p>
+<p>Our goal is to make mental health support simple and accessible by providing helpful resources, guided support, and a safe community for people to share and grow.</p>
+
+                        <div class="key-points">
+                            <div class="key-point">
+                                <div class="key-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="key-info">
+                                    <h4>10K+</h4>
+                                    <p>Counselling Sessions</p>
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <div class="key-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="key-info">
+                                    <h4>200+</h4>
+                                    <p>Experienced Volunteers</p>
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <div class="key-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="key-info">
+                                    <h4>500+</h4>
+                                    <p>Educational Institutions</p>
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <div class="key-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="key-info">
+                                    <h4>28</h4>
+                                    <p>States Covered</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-image">
+                    <div class="image-container">
+                        <img src="images/ai.png" alt="Student counseling session">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="experience-badge">
+                        <span class="years">1+</span>
+                        <span class="text">Years of<br>Experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links Section -->
+    <section id="services" class="quick-links">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card slide-up">
+                    <div class="icon-container">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-guided Support</h3>
+                    <p>Interactive chatbot offering coping strategies and professional referrals when needed.</p>
+                    <a href="AI-support.html" class="learn-more">Try Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="service-card slide-up">
+                    <div class="icon-container">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Confidential Booking</h3>
+                    <p>Schedule private appointments with campus counselors or mental health professionals.</p>
+                    <a href="appointment.html" class="learn-more">Book Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="service-card slide-up">
+                    <div class="icon-container">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Resource Hub</h3>
+                    <p>Access videos, relaxation audio, and wellness guides in multiple languages.</p>
+                    <a href="resources.html" class="learn-more">Explore <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="service-card slide-up">
+                    <div class="icon-container">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Peer Support</h3>
+                    <p>Connect with trained volunteers in a moderated, safe environment.</p>
+                    <a href="community.html" class="learn-more">Join Community <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Resources Section -->
+    <section id="resources" class="resources">
+        <div class="container">
+            <h2 class="section-title">Explore Free Mental Health Resources</h2>
+            <p class="section-description">Find calming sounds, educational videos, awareness posters, and more to support your mental well-being.</p>
+            
+            <div class="resources-tabs">
+                <button class="tab-button active" data-tab="videos">
+                    <i class="fas fa-video"></i> Videos
+                </button>
+                <button class="tab-button" data-tab="audio">
+                    <i class="fas fa-headphones"></i> Calming Audio
+                </button>
+                <button class="tab-button" data-tab="posters">
+                    <i class="fas fa-image"></i> Awareness Posters
+                </button>
+                <button class="tab-button" data-tab="guides">
+                    <i class="fas fa-book"></i> Self-Help Guides
+                </button>
+                <button class="tab-button" data-tab="books">
+                    <i class="fas fa-book-open"></i> Books
+                </button>
+                <button class="tab-button" data-tab="quotes">
+                    <i class="fas fa-quote-right"></i> Quotes
+                </button>
+            </div>
+            
+            <div class="tab-content active" id="videos-content">
+                <div class="resources-grid">
+                    <div class="resource-card video-card">
+                        <div class="resource-thumbnail" data-video-src="resource/video/3.mp4">
+                            <img src="resource/posters/1.png" alt="Understanding Anxiety">
+                        </div>
+                        <h3>Understanding Anxiety</h3>
+                        <p>Learn about the science behind anxiety and effective coping mechanisms.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Watch Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card video-card">
+                        <div class="resource-thumbnail" data-video-src="resource/video/3.mp4">
+                            <img src="resource/posters/1.png" alt="Mindfulness Meditation Guide">
+                        </div>
+                        <h3>Mindfulness Meditation Guide</h3>
+                        <p>A step-by-step meditation guide for beginners to reduce stress.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Watch Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card video-card">
+                        <div class="resource-thumbnail" data-video-src="resource/video/3.mp4">
+                            <img src="resource/posters/1.png" alt="Exam Stress Management">
+                        </div>
+                        <h3>Exam Stress Management</h3>
+                        <p>Practical techniques to manage academic pressure and exam anxiety.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Watch Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="audio-content">
+                <div class="resources-grid">
+                    <div class="resource-card audio-card">
+                        <div class="resource-thumbnail audio-thumbnail" data-audio-src="resource/audio/1.mp3">
+                            <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nature Sounds">
+                        </div>
+                        <h3>Nature Sounds</h3>
+                        <p>Soothing nature sounds to help with focus and relaxation.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Listen Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card audio-card">
+                        <div class="resource-thumbnail audio-thumbnail" data-audio-src="resource/audio/1.mp3">
+                            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Guided Meditation">
+                        </div>
+                        <h3>Guided Meditation</h3>
+                        <p>15-minute guided meditation for stress relief and mental clarity.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Listen Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card audio-card">
+                        <div class="resource-thumbnail audio-thumbnail" data-audio-src="resource/audio/1.mp3">
+                            <img src="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sleep Sounds">
+                        </div>
+                        <h3>Sleep Sounds</h3>
+                        <p>Calming audio to help you fall asleep faster and improve sleep quality.</p>
+                        <a href="#" class="resource-link" onclick="handleResourceClick(event, 'resources.html')">Listen Now <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="posters-content">
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-thumbnail poster-thumbnail">
+                            <img src="resource/posters/1.png" alt="Crisis Helplines">
+                        </div>
+                        <h3>Crisis Helplines</h3>
+                        <p>Important phone numbers and resources for mental health emergencies.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/posters/3.png', 'Crisis-Helplines-Poster.png')">Download <i class="fas fa-download"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail poster-thumbnail">
+                            <img src="resource/posters/1.png" alt="Crisis Helplines">
+                        </div>
+                        <h3>Crisis Helplines</h3>
+                        <p>Important phone numbers and resources for mental health emergencies.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/posters/3.png', 'Crisis-Helplines-Poster.png')">Download <i class="fas fa-download"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail poster-thumbnail">
+                            <img src="resource/posters/1.png" alt="Crisis Helplines">
+                        </div>
+                        <h3>Crisis Helplines</h3>
+                        <p>Important phone numbers and resources for mental health emergencies.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/posters/3.png', 'Crisis-Helplines-Poster.png')">Download <i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="guides-content">
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Exam Preparation Guide">
+                            <div class="guide-icon"><i class="fas fa-file-pdf"></i></div>
+                        </div>
+                        <h3>Exam Preparation Guide</h3>
+                        <p>Comprehensive guide to effective study techniques and exam preparation.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/guides/1.pdf', 'Exam-Preparation-Guide.pdf')">Download PDF <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Self-Care Workbook">
+                            <div class="guide-icon"><i class="fas fa-file-pdf"></i></div>
+                        </div>
+                        <h3>Self-Care Workbook</h3>
+                        <p>Interactive workbook with exercises to improve your mental well-being.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/guides/1.pdf', 'Self-Care-Workbook.pdf')">Download PDF <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nutrition and Mental Health">
+                            <div class="guide-icon"><i class="fas fa-file-pdf"></i></div>
+                        </div>
+                        <h3>Nutrition and Mental Health</h3>
+                        <p>Learn about the connection between nutrition and mental well-being.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/guides/1.pdf', 'Nutrition-and-Mental-Health.pdf')">Download PDF <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="books-content">
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Anxiety and Phobia Workbook">
+                            <div class="guide-icon"><i class="fas fa-book"></i></div>
+                        </div>
+                        <h3>The Anxiety and Phobia Workbook</h3>
+                        <p>A practical guide with proven strategies for managing anxiety, panic attacks, and phobias effectively.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/books/1.pdf', 'The-Anxiety-and-Phobia-Workbook.pdf')">Download PDF <i class="fas fa-download"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mindfulness for Students">
+                            <div class="guide-icon"><i class="fas fa-book"></i></div>
+                        </div>
+                        <h3>Mindfulness for Students</h3>
+                        <p>Learn practical mindfulness techniques specifically designed for academic stress and student life.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/books/1.pdf', 'Mindfulness-for-Students.pdf')">Download PDF <i class="fas fa-download"></i></a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-thumbnail guide-thumbnail">
+                            <img src="https://images.unsplash.com/photo-1535905557558-afc4877a26fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="The Self-Care Project">
+                            <div class="guide-icon"><i class="fas fa-book"></i></div>
+                        </div>
+                        <h3>The Self-Care Project</h3>
+                        <p>How to develop self-care habits that actually work and lead to a healthier, happier you.</p>
+                        <a href="#" class="resource-link" onclick="handleDownload(event, 'resource/books/1.pdf', 'The-Self-Care-Project.pdf')">Download PDF <i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="quotes-content">
+                <div class="resources-grid">
+                    <div class="resource-card quote-card">
+                        <div class="quote-container">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <blockquote>"Your present circumstances don't determine where you can go; they merely determine where you start."</blockquote>
+                            <p class="quote-author">— Nido Qubein</p>
+                        </div>
+                        <a href="#" class="resource-link" onclick="handleQuoteShare(event, 'Your present circumstances don\'t determine where you can go; they merely determine where you start.', 'Nido Qubein')">Share <i class="fas fa-share-alt"></i></a>
+                    </div>
+                    
+                    <div class="resource-card quote-card">
+                        <div class="quote-container">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <blockquote>"You don't have to control your thoughts. You just have to stop letting them control you."</blockquote>
+                            <p class="quote-author">— Dan Millman</p>
+                        </div>
+                        <a href="#" class="resource-link" onclick="handleQuoteShare(event, 'You don\'t have to control your thoughts. You just have to stop letting them control you.', 'Dan Millman')">Share <i class="fas fa-share-alt"></i></a>
+                    </div>
+                    
+                    <div class="resource-card quote-card">
+                        <div class="quote-container">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <blockquote>"Mental health problems don't define who you are. They are something you experience, but you walk in your own shoes."</blockquote>
+                            <p class="quote-author">— Matt Haig</p>
+                        </div>
+                        <a href="#" class="resource-link" onclick="handleQuoteShare(event, 'Mental health problems don\'t define who you are. They are something you experience, but you walk in your own shoes.', 'Matt Haig')">Share <i class="fas fa-share-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="center-button">
+                <button class="btn-primary">Explore All Resources</button>
+            </div>
+        </div>
+    </section>
+    <!-- Data Visualization Section -->
+    <section id="statistics" class="data-visualization">
+        <div class="container">
+            <h2 class="section-title">Student Mental Health Statistics</h2>
+            <div class="data-grid">
+                <div class="map-container slide-up">
+                    <h3>Select a State/UT</h3>
+                    <div class="india-map-wrapper">
+                        <div id="map-tooltip"></div>
+                        <object id="india-map-object" data="./images/india.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #4a6fa5;"></span>
+                            <span>Selected State</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #e4e9f2;"></span>
+                            <span>Other States</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-container slide-up">
+                    <h3 id="stats-title">All India Statistics</h3>
+                    <div class="stats-wrapper">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Higher Education Students</h4>
+                                <p id="education-stat">3.85 Crore</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Facing Mental Stress</h4>
+                                <p id="stress-stat">1.16 Crore (30%)</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-hand-holding-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Seeking Help</h4>
+                                <p id="help-stat">23.1 Lakh (20%)</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clinic-medical"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Available Counselors</h4>
+                                <p id="counselor-stat">1:5000 Ratio</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mental-health-chart"></canvas>
+                    </div>
+                    <div class="data-note">
+                        <i class="fas fa-info-circle"></i> Data shown is based on 2025 projections from national mental health surveys.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-column">
+                    <div class="logo">
+                        <i class="fas fa-brain"></i>
+                        <h2>Soul Space</h2>
+                    </div>
+                    <p>Supporting student mental health and wellbeing across higher education institutions in India.</p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#" onclick="checkLoginAndRedirect('resources.html')">Resources</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#" onclick="checkLoginAndRedirect('mood.html')">Track Mood</a></li>
+                        <li><a href="#" onclick="checkLoginAndRedirect('mental-home.html')">Check Mental Health</a></li>
+                        <li><a href="#" onclick="checkLoginAndRedirect('AI-support.html')">AI Support</a></li>
+                        <li><a href="#" onclick="checkLoginAndRedirect('appointment.html')">Book Appointments</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> for support, Contact chravija@gmail.com , Pavithramk535@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> Helpline: 1234567899</li>
+                        <li><i class="fas fa-ambulance"></i> Emergency: 100</li>
+                        <li><i class="fas fa-map-marker-alt"></i> India</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Soul Space. All rights reserved. <a href="team.html">Janani , Pavithra</a></p>
+                <div class="footer-links">
+                    <a href="policy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Dialog -->
+    <div id="login-dialog" class="auth-dialog">
+        <div class="auth-container">
+            <div class="auth-close" onclick="toggleDialog('login-dialog', false)">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="auth-content">
+                <div class="auth-image">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Login">
+                    <div class="auth-image-text">
+                        <h3>Welcome Back!</h3>
+                        <p>Sign in to access personalized mental wellness resources and support.</p>
+                    </div>
+                </div>
+                <div class="auth-form">
+                    <div class="form-header">
+                        <div class="logo">
+                            <i class="fas fa-brain"></i>
+                            <h2>Soul Space</h2>
+                        </div>
+                        <h3>Login to Your Account</h3>
+                    </div>
+                    <form id="login-form" onsubmit="return validateLoginForm(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="login-email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-with-icon password-field">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="login-password" placeholder="Enter your password" required>
+                                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('login-password', this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Captcha Verification</label>
+                            <div class="captcha-container">
+                                <div id="login-captcha-display" class="captcha-display"></div>
+                                <button type="button" class="refresh-captcha" onclick="generateCaptcha('login-captcha-display')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="input-with-icon">
+                                <i class="fas fa-shield-alt"></i>
+                                <input type="text" id="login-captcha-input" placeholder="Enter captcha code" required>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <div class="remember-me">
+                                <input type="checkbox" id="remember-me">
+                                <label for="remember-me">Remember me</label>
+                            </div>
+                            <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Login</button>
+                        <div class="auth-footer">
+                            <p>Don't have an account? <a href="#" onclick="switchDialog('login-dialog', 'register-dialog')">Sign Up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Dialog -->
+    <div id="register-dialog" class="auth-dialog">
+        <div class="auth-container">
+            <div class="auth-close" onclick="toggleDialog('register-dialog', false)">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="auth-content">
+                <div class="auth-image">
+                    <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Register">
+                    <div class="auth-image-text">
+                        <h3>Join Soul Space</h3>
+                        <p>Create an account to begin your mental wellness journey with personalized support.</p>
+                    </div>
+                </div>
+                <div class="auth-form">
+                    <div class="form-header">
+                        <div class="logo">
+                            <i class="fas fa-brain"></i>
+                            <h2>Soul Space</h2>
+                        </div>
+                        <h3>Create Your Account</h3>
+                    </div>
+                    <form id="register-form" onsubmit="return validateRegisterForm(event)">
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="first-name">First Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="first-name" placeholder="First name" required>
+                                </div>
+                            </div>
+                            <div class="form-group half">
+                                <label for="last-name">Last Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="last-name" placeholder="Last name" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email Address</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="register-email" placeholder="Email address" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                                <input type="tel" id="mobile" placeholder="Mobile number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <div class="dob-container">
+                                <div class="dob-input">
+                                    <input type="number" id="dob-day" placeholder="DD" min="1" max="31" required>
+                                    <label for="dob-day">Day</label>
+                                </div>
+                                <div class="dob-input">
+                                    <select id="dob-month" required>
+                                        <option value="" disabled selected>Month</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <label for="dob-month">Month</label>
+                                </div>
+                                <div class="dob-input">
+                                    <input type="number" id="dob-year" placeholder="YYYY" min="1950" max="2010" required>
+                                    <label for="dob-year">Year</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="create-password">Create Password</label>
+                                <div class="input-with-icon password-field">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="create-password" placeholder="Create password" required>
+                                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('create-password', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group half">
+                                <label for="confirm-password">Confirm Password</label>
+                                <div class="input-with-icon password-field">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="confirm-password" placeholder="Confirm password" required>
+                                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirm-password', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Captcha Verification</label>
+                            <div class="captcha-container">
+                                <div id="register-captcha-display" class="captcha-display"></div>
+                                <button type="button" class="refresh-captcha" onclick="generateCaptcha('register-captcha-display')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="input-with-icon">
+                                <i class="fas fa-shield-alt"></i>
+                                <input type="text" id="register-captcha-input" placeholder="Enter captcha code" required>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="terms-agree" required>
+                            <label for="terms-agree">I accept the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Sign Up</button>
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="#" onclick="switchDialog('register-dialog', 'login-dialog')">Login</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Dialog -->
+    <div id="forgot-password-dialog" class="auth-dialog">
+        <div class="auth-container forgot-password-container">
+            <div class="auth-close" onclick="toggleDialog('forgot-password-dialog', false)">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="auth-form centered">
+                <div class="form-header">
+                    <div class="logo">
+                        <i class="fas fa-brain"></i>
+                        <h2>Soul Space</h2>
+                    </div>
+                    <h3>Reset Your Password</h3>
+                    <p>Enter your email address and we'll send you a link to reset your password.</p>
+                </div>
+                <form id="forgot-password-form" onsubmit="return handleForgotPassword(event)">
+                    <div class="form-group">
+                        <label for="reset-email">Email Address</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="reset-email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Send Reset Link</button>
+                    <div class="auth-footer">
+                        <p><a href="#" onclick="switchDialog('forgot-password-dialog', 'login-dialog')">Back to Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- OTP Verification Dialog -->
+    <div id="otp-dialog" class="auth-dialog">
+        <div class="auth-container forgot-password-container">
+            <div class="auth-close" onclick="toggleDialog('otp-dialog', false)">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="auth-form centered">
+                <div class="form-header">
+                    <div class="logo">
+                        <i class="fas fa-brain"></i>
+                        <h2>Soul Space</h2>
+                    </div>
+                    <h3>Verify Your Account</h3>
+                    <p>Enter the OTP sent to your email/mobile.</p>
+                </div>
+                <form id="otp-form" onsubmit="return handleOTPVerification(event)">
+                    <div class="form-group otp-container">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1" required>
+                        <input type="text" class="otp-input" maxlength="1" data-index="2" required>
+                        <input type="text" class="otp-input" maxlength="1" data-index="3" required>
+                        <input type="text" class="otp-input" maxlength="1" data-index="4" required>
+                        <input type="text" class="otp-input" maxlength="1" data-index="5" required>
+                        <input type="text" class="otp-input" maxlength="1" data-index="6" required>
+                    </div>
+                    <div class="resend-container">
+                        <p>Didn't receive OTP? <a href="#" id="resend-otp">Resend OTP</a></p>
+                        <p id="resend-timer">Resend in <span id="timer">60</span> seconds</p>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Verify OTP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+        <!-- Chatbot Widget -->
+    <div class="chatbot-widget">
+        <button class="chatbot-toggle" id="chatbot-toggle">
+            <img src="images/chatbot.gif" alt="SoulSpace Assistant" class="chatbot-icon">
+            <div class="chatbot-notification" id="chatbot-notification">1</div>
+        </button>
+        
+        <div class="chatbot-container" id="chatbot-container">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <img src="images/chatbot.gif" alt="Assistant" class="chatbot-avatar">
+                    <div class="chatbot-info">
+                        <h4>Soul Space Assistant</h4>
+                        <p>Online • Ready to help</p>
+                    </div>
+                </div>
+                <button class="chatbot-close" id="chatbot-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbot-messages">
+                <!-- Messages will be dynamically added here -->
+            </div>
+            
+            <div class="typing-indicator" id="typing-indicator">
+                <img src="images/chatbot.gif" alt="Assistant" class="message-avatar">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Type your message..." maxlength="500">
+                <button class="chatbot-send" id="chatbot-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+    // Configure API URL based on environment - will be overridden by config.js
+    (function() {
+        // Wait for config.js to load, then check if we have a proper ENV_API_URL
+        setTimeout(() => {
+            if (!window.ENV_API_URL) {
+                // Fallback configuration if .env loading failed
+                const isProduction = window.location.hostname !== 'localhost' && 
+                                   !window.location.hostname.includes('127.0.0.1');
+                
+                if (isProduction) {
+                    window.ENV_API_URL = 'https://mindspace-9a0l.onrender.com';
+                    console.log('Running in production mode, API URL:', window.ENV_API_URL);
+                } else {
+                    // Keep fallback aligned with backend default server port.
+                    window.ENV_API_URL = 'http://localhost:5000';
+                    console.log('Running in development mode, API URL:', window.ENV_API_URL);
+                }
+            }
+            
+            console.log('Final API URL configured:', window.ENV_API_URL);
+        }, 100);
+    })();
+    </script>
+    <script>
+        // Global variables to track currently playing media
+        let currentlyPlayingVideo = null;
+        let currentlyPlayingAudio = null;
+        
+        // Initialize hover-based media playback when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHoverMediaPlayback();
+        });
+        
+        // Function to stop all other media
+        function stopAllOtherMedia(currentMedia, type) {
+            // Stop other videos (but not the current one)
+            if (type !== 'video' && currentlyPlayingVideo && currentlyPlayingVideo !== currentMedia) {
+                currentlyPlayingVideo.pause();
+                currentlyPlayingVideo = null;
+            }
+            
+            // Stop other audio (but not the current one)
+            if (type !== 'audio' && currentlyPlayingAudio && currentlyPlayingAudio !== currentMedia) {
+                currentlyPlayingAudio.pause();
+                currentlyPlayingAudio = null;
+            }
+            
+            // Stop ALL other videos when playing audio, and vice versa
+            if (type === 'audio' && currentlyPlayingVideo) {
+                currentlyPlayingVideo.pause();
+                currentlyPlayingVideo = null;
+            }
+            
+            if (type === 'video' && currentlyPlayingAudio) {
+                currentlyPlayingAudio.pause();
+                currentlyPlayingAudio = null;
+            }
+        }
+        
+        // Initialize hover-based media playback
+        function initializeHoverMediaPlayback() {
+            // Handle video cards
+            document.querySelectorAll('.video-card .resource-thumbnail').forEach(thumbnail => {
+                thumbnail.addEventListener('mouseenter', () => {
+                    playVideoOnHover(thumbnail);
+                });
+                
+                thumbnail.addEventListener('mouseleave', () => {
+                    stopVideoOnLeave(thumbnail);
+                });
+            });
+            
+            // Handle audio cards
+            document.querySelectorAll('.audio-card .resource-thumbnail').forEach(thumbnail => {
+                thumbnail.addEventListener('mouseenter', () => {
+                    playAudioOnHover(thumbnail);
+                });
+                
+                thumbnail.addEventListener('mouseleave', () => {
+                    stopAudioOnLeave(thumbnail);
+                });
+            });
+        }
+        
+        // Play video on hover
+        function playVideoOnHover(thumbnail) {
+            const videoSrc = thumbnail.dataset.videoSrc;
+            if (!videoSrc) return;
+            
+            let video = thumbnail.querySelector('.resource-video');
+            
+            // If no video element exists, create one
+            if (!video) {
+                video = document.createElement('video');
+                video.className = 'resource-video';
+                video.controls = false;
+                video.muted = true; // Mute for autoplay compatibility
+                video.loop = true;
+                video.preload = 'metadata';
+                video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;';
+                
+                // Create source element
+                const source = document.createElement('source');
+                source.src = videoSrc;
+                source.type = 'video/mp4';
+                video.appendChild(source);
+                
+                // Hide the existing image
+                const img = thumbnail.querySelector('img');
+                if (img) img.style.display = 'none';
+                
+                thumbnail.appendChild(video);
+                
+                // Add playing overlay
+                const playingOverlay = document.createElement('div');
+                playingOverlay.className = 'video-playing-overlay';
+                playingOverlay.style.cssText = `
+                    position: absolute; 
+                    top: 10px; 
+                    right: 10px; 
+                    background: rgba(0,0,0,0.7); 
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 15px;
+                    font-size: 12px;
+                    z-index: 2;
+                    display: none;
+                `;
+                playingOverlay.innerHTML = '<i class="fas fa-play"></i> Playing';
+                
+                thumbnail.appendChild(playingOverlay);
+            }
+            
+            // Stop other media and play this video
+            stopAllOtherMedia(video, 'video');
+            
+            setTimeout(() => {
+                video.play().then(() => {
+                    currentlyPlayingVideo = video;
+                    const overlay = thumbnail.querySelector('.video-playing-overlay');
+                    if (overlay) overlay.style.display = 'block';
+                }).catch(error => {
+                    console.error('Error playing video on hover:', error);
+                });
+            }, 100);
+        }
+        
+        // Stop video on mouse leave
+        function stopVideoOnLeave(thumbnail) {
+            const video = thumbnail.querySelector('.resource-video');
+            if (video && !video.paused) {
+                video.pause();
+                if (currentlyPlayingVideo === video) {
+                    currentlyPlayingVideo = null;
+                }
+                
+                const overlay = thumbnail.querySelector('.video-playing-overlay');
+                if (overlay) overlay.style.display = 'none';
+                
+                // Show image again
+                const img = thumbnail.querySelector('img');
+                if (img) img.style.display = 'block';
+            }
+        }
+        
+        // Play audio on hover
+        function playAudioOnHover(thumbnail) {
+            const audioSrc = thumbnail.dataset.audioSrc;
+            if (!audioSrc) return;
+            
+            let audio = thumbnail.querySelector('.resource-audio');
+            
+            // If no audio element exists, create one
+            if (!audio) {
+                audio = document.createElement('audio');
+                audio.className = 'resource-audio';
+                audio.preload = 'metadata';
+                audio.loop = true;
+                audio.style.display = 'none';
+                
+                // Create source element
+                const source = document.createElement('source');
+                source.src = audioSrc;
+                source.type = 'audio/mpeg';
+                audio.appendChild(source);
+                
+                thumbnail.appendChild(audio);
+                
+                // Add visual feedback for audio playing
+                const audioOverlay = document.createElement('div');
+                audioOverlay.className = 'audio-playing-overlay';
+                audioOverlay.style.cssText = `
+                    position: absolute; 
+                    top: 0; 
+                    left: 0; 
+                    width: 100%; 
+                    height: 100%; 
+                    background: rgba(64, 115, 192, 0.3); 
+                    display: none; 
+                    align-items: center; 
+                    justify-content: center; 
+                    z-index: 2;
+                `;
+                audioOverlay.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <i class="fas fa-music" style="font-size: 24px; margin-bottom: 5px; display: block;"></i>
+                        <div style="font-size: 12px;">Playing...</div>
+                    </div>
+                `;
+                
+                thumbnail.appendChild(audioOverlay);
+            }
+            
+            // Stop other media and play this audio
+            stopAllOtherMedia(audio, 'audio');
+            
+            setTimeout(() => {
+                audio.play().then(() => {
+                    currentlyPlayingAudio = audio;
+                    const overlay = thumbnail.querySelector('.audio-playing-overlay');
+                    if (overlay) overlay.style.display = 'flex';
+                }).catch(error => {
+                    console.error('Error playing audio on hover:', error);
+                });
+            }, 100);
+        }
+        
+        // Stop audio on mouse leave
+        function stopAudioOnLeave(thumbnail) {
+            const audio = thumbnail.querySelector('.resource-audio');
+            if (audio && !audio.paused) {
+                audio.pause();
+                if (currentlyPlayingAudio === audio) {
+                    currentlyPlayingAudio = null;
+                }
+                
+                const overlay = thumbnail.querySelector('.audio-playing-overlay');
+                if (overlay) overlay.style.display = 'none';
+            }
+        }
+        
+        // Function to handle resource link clicks with authentication check
+        function handleResourceClick(event, targetUrl) {
+            event.preventDefault();
+            
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                // User is logged in, redirect to target page
+                window.location.href = targetUrl;
+            } else {
+                // User is not logged in, show notification and open login dialog
+                showInfo('Please sign up or log in to access this feature');
+                toggleDialog('login-dialog', true);
+            }
+        }
+        
+        // Function to handle downloads with authentication check
+        function handleDownload(event, fileUrl, fileName) {
+            event.preventDefault();
+            
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                // User is logged in, start download
+                const link = document.createElement('a');
+                link.href = fileUrl;
+                link.download = fileName || 'download';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showSuccess('Download started successfully!');
+            } else {
+                // User is not logged in, show notification and open login dialog
+                showInfo('Please sign up or log in to download this resource');
+                toggleDialog('login-dialog', true);
+            }
+        }
+        
+        // Function to handle quote sharing
+        function handleQuoteShare(event, quoteText, author) {
+            event.preventDefault();
+            
+            const shareText = `"${quoteText}" - ${author}`;
+            const shareUrl = window.location.href;
+            
+            // Check if Web Share API is supported
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SoulSpace - Inspirational Quote',
+                    text: shareText,
+                    url: shareUrl,
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(`${shareText}\n\nShared from: ${shareUrl}`).then(() => {
+                    showSuccess('Quote copied to clipboard!');
+                }).catch(() => {
+                    // If clipboard API fails, show share options
+                    showShareOptions(shareText, shareUrl);
+                });
+            }
+        }
+        
+        // Function to show share options if Web Share API is not available
+        function showShareOptions(text, url) {
+            const encodedText = encodeURIComponent(text);
+            const encodedUrl = encodeURIComponent(url);
+            
+            const shareUrls = {
+                twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`,
+                linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+                whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`
+            };
+            // Create a simple share modal
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; max-width: 300px;">
+                        <h3>Share this quote</h3>
+                        <div style="display: flex; gap: 10px; margin: 15px 0;">
+                            <a href="${shareUrls.twitter}" target="_blank" style="padding: 10px; background: #1da1f2; color: white; text-decoration: none; border-radius: 5px;">Twitter</a>
+                            <a href="${shareUrls.facebook}" target="_blank" style="padding: 10px; background: #4267b2; color: white; text-decoration: none; border-radius: 5px;">Facebook</a>
+                            <a href="${shareUrls.whatsapp}" target="_blank" style="padding: 10px; background: #25d366; color: white; text-decoration: none; border-radius: 5px;">WhatsApp</a>
+                        </div>
+                        <button onclick="this.closest('div').parentElement.remove()" style="background: #ccc; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+    </script>
+    <script>
+            // Add the user authentication and navigation handling code
+    document.addEventListener('DOMContentLoaded', function() {
+        // Helper function to handle protected links
+        function handleProtectedLink(targetUrl) {
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                // User is logged in, redirect to target page
+                window.location.href = targetUrl;
+            } else {
+                // User is not logged in, show notification and open signup dialog
+                showInfo('Please sign up or log in to access this feature');
+                toggleDialog('login-dialog', true);
+            }
+        }
+        
+        // Add click handlers for specific buttons
+        
+        // Mood tracker button
+        const moodTrackerBtn = document.querySelector('.mood-tracker-btn');
+        if (moodTrackerBtn) {
+            moodTrackerBtn.addEventListener('click', function() {
+                handleProtectedLink('mood.html');
+            });
+        }
+        
+        // Hero section buttons
+        const heroButtons = document.querySelector('.hero-buttons');
+        if (heroButtons) {
+            const buttons = heroButtons.querySelectorAll('button');
+            if (buttons.length >= 2) {
+                // Get Started button
+                buttons[0].addEventListener('click', function() {
+                    handleProtectedLink('mental-home.html');
+                });
+                
+                // Learn More button
+                buttons[1].addEventListener('click', function() {
+                    handleProtectedLink('learn-more.html');
+                });
+            }
+        }
+        
+        // Explore All Resources button
+        const exploreResourcesBtn = document.querySelector('.center-button .btn-primary');
+        if (exploreResourcesBtn) {
+            exploreResourcesBtn.addEventListener('click', function() {
+                handleProtectedLink('resources.html');
+            });
+        }
+        
+        // Add event delegation for services and resources sections
+        document.addEventListener('click', function(e) {
+            // Check if the click is on a link in the services section
+            if (e.target.closest('#services a') || e.target.closest('#resources a')) {
+                const link = e.target.closest('a');
+                if (link && link.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    handleProtectedLink(link.getAttribute('href'));
+                }
+            }
+        });
+        
+        // Check login status
+        const authToken = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        // Update navigation based on authentication
+        updateNavigation();
+        
+        if (authToken) {
+            // User is logged in - show profile dropdown
+            const authButtonsContainer = document.querySelector('.auth-buttons-container');
+            const userProfileDropdown = document.querySelector('.user-profile-dropdown');
+            
+            if (authButtonsContainer) authButtonsContainer.style.display = 'none';
+            if (userProfileDropdown) userProfileDropdown.style.display = 'block';
+            
+            // Update user info in the dropdown
+            const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+            const initials = ((userData.firstName || '').charAt(0) + (userData.lastName || '').charAt(0)).toUpperCase();
+            
+            const headerUsername = document.getElementById('header-username');
+            const headerAvatar = document.getElementById('header-avatar');
+            
+            if (headerUsername) headerUsername.textContent = userData.firstName || 'User';
+            if (headerAvatar) headerAvatar.textContent = initials || 'U';
+            
+            // Toggle profile dropdown
+            const profileTrigger = document.getElementById('profile-trigger');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            if (profileTrigger && profileDropdown) {
+                profileTrigger.addEventListener('click', function() {
+                    profileDropdown.classList.toggle('active');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!profileTrigger.contains(event.target) && !profileDropdown.contains(event.target)) {
+                        profileDropdown.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Handle logout
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Clear authentication data
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    
+                    // Show success notification
+                    showSuccess('Logged out successfully!');
+                    
+                    // Refresh the page after short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                });
+            }
+        } else {
+            // User is not logged in - show auth buttons
+            const authButtonsContainer = document.querySelector('.auth-buttons-container');
+            const userProfileDropdown = document.querySelector('.user-profile-dropdown');
+            
+            if (authButtonsContainer) authButtonsContainer.style.display = 'flex';
+            if (userProfileDropdown) userProfileDropdown.style.display = 'none';
+        }
+    });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>
