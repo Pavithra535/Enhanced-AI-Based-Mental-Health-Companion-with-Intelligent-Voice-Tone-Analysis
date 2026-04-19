@@ -138,6 +138,32 @@
         </div>
     </section>
 
+    <!-- Character Companion Section -->
+    <div class="character-selector-card appointment-companion-card" style="margin: 30px auto; max-width: 1200px;">
+        <div class="character-selector-header">
+            <h3 id="appointment-companion-title">Booking Assistant</h3>
+            <p id="appointment-companion-msg">Choose your companion to assist with scheduling your appointment</p>
+        </div>
+        <div class="character-grid compact">
+            <div class="character-option active" data-character="aya" onclick="setCharacter('aya', event)">
+                <div class="character-avatar aya-avatar"><i class="fas fa-feather-alt"></i></div>
+                <div class="character-name">Aya</div>
+            </div>
+            <div class="character-option" data-character="arjun" onclick="setCharacter('arjun', event)">
+                <div class="character-avatar arjun-avatar"><i class="fas fa-spa"></i></div>
+                <div class="character-name">Arjun</div>
+            </div>
+            <div class="character-option" data-character="neha" onclick="setCharacter('neha', event)">
+                <div class="character-avatar neha-avatar"><i class="fas fa-leaf"></i></div>
+                <div class="character-name">Neha</div>
+            </div>
+            <div class="character-option" data-character="sam" onclick="setCharacter('sam', event)">
+                <div class="character-avatar sam-avatar"><i class="fas fa-sun"></i></div>
+                <div class="character-name">Sam</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Booking Section -->
     <section class="booking-section">
         <div class="appointment-container">
@@ -464,6 +490,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script src="js/appointment.js"></script>
     <script>

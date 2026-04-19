@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variables for tracking selected mood
     let selectedMood = null;
     let mediaStream = null;
+    let hasTriggeredCrisisSupport = false;
     
     // Mood data for the chart
     let moodHistory = [];
@@ -55,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'Sad': '😢',
         'Surprise': '😲'
     };
+
+    const highRiskMoodLabels = ['sad', 'depressive', 'depressed', 'fear', 'disgust'];
     
     // API Configuration - will be loaded from server
     let apiConfig = {
@@ -184,6 +187,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success && data.isRecent) {
                 // User has tracked mood within the last 2 hours
                 updateMoodTrackerButton(data.data);
+                if (isHighRiskMood(data.data.label)) {
+                    await triggerNearbyCrisisSupport(
+                        'Recent mood indicates possible depressive/high-risk state. Please consider nearby counseling support.'
+                    );
+                }
             }
         } catch (error) {
             console.error('Error checking recent mood:', error);
@@ -199,6 +207,79 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="mood-emoji">${emoji}</span> Mood: <strong>${moodData.label}</strong>
         `;
         moodTrackerBtn.classList.add('current-mood');
+    }
+
+    function isHighRiskMood(label) {
+        if (!label) return false;
+        const lowered = String(label).toLowerCase();
+        return highRiskMoodLabels.some(token => lowered.includes(token));
+    }
+
+    function containsDeathOrSelfHarmLanguage(text) {
+        if (!text) return false;
+        const lowered = text.toLowerCase();
+        const keywords = [
+            'death', 'die', 'dead', 'suicide', 'kill myself', 'end my life',
+            'want to die', 'self harm', 'hurt myself', 'better off dead'
+        ];
+        return keywords.some(keyword => lowered.includes(keyword));
+    }
+
+    async function triggerNearbyCrisisSupport(triggerText) {
+        if (hasTriggeredCrisisSupport) return;
+        hasTriggeredCrisisSupport = true;
+
+        try {
+            if (!navigator.geolocation) {
+                renderNearbyCrisisSupport(null, null, triggerText);
+                return;
+            }
+
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 60000
+                });
+            });
+
+            renderNearbyCrisisSupport(position.coords.latitude, position.coords.longitude, triggerText);
+        } catch (error) {
+            console.error('Unable to fetch location for crisis support:', error);
+            renderNearbyCrisisSupport(null, null, triggerText);
+        }
+    }
+
+    function renderNearbyCrisisSupport(lat, lon, triggerText) {
+        const hasLocation = Number.isFinite(lat) && Number.isFinite(lon);
+        const nearbyCounsellingLink = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('counselling center near me')}&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/counselling+center+near+me';
+        const nearbyClinicLink = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('mental health clinic near me')}&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/mental+health+clinic+near+me';
+        const nearbyPsychiatristLink = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('psychiatrist near me')}&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/psychiatrist+near+me';
+
+        result.innerHTML = `
+            <div class="result-content" style="text-align: left;">
+                <h4 style="margin-bottom: 8px; color: #b91c1c;">Immediate Support Suggested</h4>
+                <p style="margin-bottom: 10px;">${triggerText}</p>
+                <ul style="padding-left: 18px; margin-bottom: 12px;">
+                    <li><a href="${nearbyCounsellingLink}" target="_blank" rel="noopener noreferrer">Nearby counselling centers</a></li>
+                    <li><a href="${nearbyClinicLink}" target="_blank" rel="noopener noreferrer">Nearby mental health clinics</a></li>
+                    <li><a href="${nearbyPsychiatristLink}" target="_blank" rel="noopener noreferrer">Nearby psychiatrists</a></li>
+                    <li><a href="tel:9152987821">Call crisis helpline: 9152987821</a></li>
+                </ul>
+                <p style="font-size: 12px; color: #7f1d1d;">
+                    ${hasLocation ? 'Location used only to show nearby support options.' : 'Location unavailable, showing generic nearby searches.'}
+                </p>
+            </div>
+        `;
+        result.style.backgroundColor = '#fef2f2';
+        result.style.border = '2px solid #ef4444';
+        result.style.borderRadius = '12px';
     }
     
     // Function to load mood history from the server
@@ -494,6 +575,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Load recommendations for the detected mood
                 await loadRecommendations(label);
+
+                if (isHighRiskMood(label) || containsDeathOrSelfHarmLanguage(notes || '')) {
+                    await triggerNearbyCrisisSupport(
+                        'Your mood/notes indicate possible high emotional risk. Please connect with nearby professional support now.'
+                    );
+                }
                 
                 return true;
             } else {

@@ -97,6 +97,32 @@
                 </div>
             </div>
 
+            <!-- Character Companion Section -->
+            <div class="character-selector-card mental-health-companion-card" style="margin: 30px 0;">
+                <div class="character-selector-header">
+                    <h3 id="mental-health-companion-title">Your Wellness Guide</h3>
+                    <p id="mental-health-companion-msg">Choose your mindful companion for this assessment journey</p>
+                </div>
+                <div class="character-grid compact">
+                    <div class="character-option active" data-character="aya" onclick="setCharacter('aya', event)">
+                        <div class="character-avatar aya-avatar"><i class="fas fa-feather-alt"></i></div>
+                        <div class="character-name">Aya</div>
+                    </div>
+                    <div class="character-option" data-character="arjun" onclick="setCharacter('arjun', event)">
+                        <div class="character-avatar arjun-avatar"><i class="fas fa-spa"></i></div>
+                        <div class="character-name">Arjun</div>
+                    </div>
+                    <div class="character-option" data-character="neha" onclick="setCharacter('neha', event)">
+                        <div class="character-avatar neha-avatar"><i class="fas fa-leaf"></i></div>
+                        <div class="character-name">Neha</div>
+                    </div>
+                    <div class="character-option" data-character="sam" onclick="setCharacter('sam', event)">
+                        <div class="character-avatar sam-avatar"><i class="fas fa-sun"></i></div>
+                        <div class="character-name">Sam</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Module Content Container -->
             <div id="module-container">
                 <!-- Modules will be loaded here dynamically -->
@@ -105,6 +131,7 @@
     </main>
 
     <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script src="js/mental-health-modular.js"></script>
 </body>

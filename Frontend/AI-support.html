@@ -101,8 +101,9 @@
                         <div class="chat-header-info">
                             <div class="ai-status-indicator"></div>
                             <div class="ai-info">
-                                <h3>Chat Session</h3>
+                                <h3 id="chat-title">Chat Session</h3>
                                 <p class="ai-status" id="chat-status">Ready to help you</p>
+                                <p class="voice-tone-hint" id="voice-tone-hint" hidden></p>
                             </div>
                         </div>
                         <div class="chat-controls">
@@ -121,11 +122,11 @@
                     <div class="chat-messages" id="chat-messages">
                         <div class="message ai-message">
                             <div class="message-avatar">
-                                <i class="fas fa-robot"></i>
+                                <i class="fas fa-user-astronaut"></i>
                             </div>
                             <div class="message-content">
                                 <div class="message-text">
-                                    <h4>Hello! I'm your Soul Space AI Assistant</h4>
+                                    <h4 id="welcome-heading">Hello! I am your Soul Space companion</h4>
                                     <p>I'm here to provide emotional support and guidance tailored to your needs. Feel free to share what's on your mind today.</p>
                                     <ul>
                                         <li>Share your feelings openly</li>
@@ -193,16 +194,45 @@
 
                 <!-- Sidebar -->
                 <div class="chat-sidebar">
+                    <div class="companion-presence-card">
+                        <div class="presence-top">
+                            <div class="presence-avatar-wrap">
+                                <div class="presence-avatar-glow"></div>
+                                <div class="presence-avatar" id="presence-avatar">
+                                    <i class="fas fa-user-astronaut" id="presence-avatar-icon"></i>
+                                </div>
+                            </div>
+                            <div class="presence-meta">
+                                <p class="presence-label">Your Companion</p>
+                                <h3 id="presence-name">Soul Companion</h3>
+                                <p id="presence-role">Emotionally aware support partner</p>
+                            </div>
+                        </div>
+
+                        <p class="presence-message" id="presence-message">I am here with you. Start with how your day felt emotionally.</p>
+
+                        <div class="presence-vibes">
+                            <span class="vibe-chip" id="presence-vibe">Warm</span>
+                            <span class="vibe-chip">Private</span>
+                            <span class="vibe-chip">No Judgment</span>
+                        </div>
+
+                        <div class="presence-prompts">
+                            <button class="presence-prompt-btn quick-action-btn" data-message="Can we do a calm check-in before we chat?">Calm Check-In</button>
+                            <button class="presence-prompt-btn quick-action-btn" data-message="Ask me reflective questions to understand my feelings better.">Reflective Talk</button>
+                        </div>
+                    </div>
+
                     <!-- AI Assistant Header - Updated Structure -->
                     <div class="ai-assistant-header">
                         <div class="ai-header-content">
                             <div class="ai-header-main">
                                 <div class="ai-header-avatar">
-                                    <i class="fas fa-robot"></i>
+                                    <i class="fas fa-user-astronaut" id="sidebar-avatar-icon"></i>
                                 </div>
                                 <div class="ai-header-info">
-                                    <h1>AI Assistant</h1>
-                                    <p>Your personal mental health companion</p>
+                                    <h1 id="sidebar-companion-name">AI Assistant</h1>
+                                    <p id="sidebar-companion-role">Your personal mental health companion</p>
                                 </div>
                             </div>
                             <div class="mood-status-pill" id="mood-status-pill">
@@ -318,6 +348,7 @@
 
     <script src="js/config.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/ai-support.js"></script>
 </body>
 </html>

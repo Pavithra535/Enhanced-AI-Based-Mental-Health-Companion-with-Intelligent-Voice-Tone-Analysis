@@ -94,9 +94,56 @@
     <!-- Dashboard Section -->
     <section id="dashboard" class="dashboard-container">
         <div class="container">
+            <!-- Character Companion Selector -->
+            <div class="character-selector-card">
+                <div class="character-selector-header">
+                    <h3>Choose Your Companion</h3>
+                    <p id="companion-intro">Select a character to personalize your dashboard experience</p>
+                </div>
+                <div class="character-grid">
+                    <div class="character-option active" data-character="aya" onclick="setCharacter('aya', event)">
+                        <div class="character-avatar aya-avatar">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <div class="character-name">Aya</div>
+                        <div class="character-role">Mindful Guide</div>
+                    </div>
+                    <div class="character-option" data-character="arjun" onclick="setCharacter('arjun', event)">
+                        <div class="character-avatar arjun-avatar">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="character-name">Arjun</div>
+                        <div class="character-role">Empathy Coach</div>
+                    </div>
+                    <div class="character-option" data-character="neha" onclick="setCharacter('neha', event)">
+                        <div class="character-avatar neha-avatar">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="character-name">Neha</div>
+                        <div class="character-role">Growth Partner</div>
+                    </div>
+                    <div class="character-option" data-character="sam" onclick="setCharacter('sam', event)">
+                        <div class="character-avatar sam-avatar">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="character-name">Sam</div>
+                        <div class="character-role">Joy Creator</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="welcome-card">
-                <h1>Welcome to your Dashboard, <span id="user-name">User</span>!</h1>
-                <p>Here you can access all your mental wellness resources, track your progress, and get personalized support.</p>
+                <div class="welcome-with-character">
+                    <div class="character-greeting">
+                        <div class="character-avatar-large" id="dashboard-character-avatar">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <div class="greeting-text">
+                            <h1>Welcome to your Dashboard, <span id="user-name">User</span>!</h1>
+                            <p id="character-greeting-msg">I'm Aya, your mindful guide. Here you can access all your mental wellness resources, track your progress, and get personalized support.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="profile-section">
@@ -203,6 +250,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

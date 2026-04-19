@@ -72,12 +72,38 @@
     <!-- Profile Container -->
     <div class="profile-container">
         <div class="container">
+            <!-- Character Companion Selector -->
+            <div class="character-selector-card profile-character-selector">
+                <div class="character-selector-header">
+                    <h3>Your Wellness Companion</h3>
+                    <p>Choose who guides your journey</p>
+                </div>
+                <div class="character-grid compact">
+                    <div class="character-option active" data-character="aya" onclick="setCharacter('aya', event)">
+                        <div class="character-avatar aya-avatar"><i class="fas fa-feather-alt"></i></div>
+                        <div class="character-name">Aya</div>
+                    </div>
+                    <div class="character-option" data-character="arjun" onclick="setCharacter('arjun', event)">
+                        <div class="character-avatar arjun-avatar"><i class="fas fa-hand-holding-heart"></i></div>
+                        <div class="character-name">Arjun</div>
+                    </div>
+                    <div class="character-option" data-character="neha" onclick="setCharacter('neha', event)">
+                        <div class="character-avatar neha-avatar"><i class="fas fa-seedling"></i></div>
+                        <div class="character-name">Neha</div>
+                    </div>
+                    <div class="character-option" data-character="sam" onclick="setCharacter('sam', event)">
+                        <div class="character-avatar sam-avatar"><i class="fas fa-star"></i></div>
+                        <div class="character-name">Sam</div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Welcome Message -->
             <div class="welcome-section">
                 <div class="welcome-content">
                     <div class="welcome-text">
                         <h1 id="welcome-message">👋 Welcome User!</h1>
-                        <p>Manage your personal information and track your wellness journey</p>
+                        <p id="companion-msg">Manage your personal information and track your wellness journey</p>
                     </div>
                     <!-- Profile Completion Notice -->
                     <div class="profile-completion-notice" id="profile-completion-notice" style="display: none;">
@@ -679,6 +705,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script src="js/profile.js"></script>
     <script>

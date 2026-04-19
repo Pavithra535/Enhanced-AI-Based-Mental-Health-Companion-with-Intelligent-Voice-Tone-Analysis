@@ -98,6 +98,31 @@
 
  <section id="mood" class="dashboard-container">
         <div class="container">
+            <!-- Character Companion for Mood Tracking -->
+            <div class="character-selector-card mood-companion-card">
+                <div class="character-selector-header">
+                    <h3 id="mood-companion-title">Aya's Mood Check-in</h3>
+                    <p id="mood-companion-msg">Let me help you understand your emotions today</p>
+                </div>
+                <div class="character-grid compact-inline">
+                    <div class="character-option active" data-character="aya" onclick="setMoodCharacter('aya')">
+                        <div class="character-avatar aya-avatar"><i class="fas fa-feather-alt"></i></div>
+                        <div class="character-name">Aya</div>
+                    </div>
+                    <div class="character-option" data-character="arjun" onclick="setMoodCharacter('arjun')">
+                        <div class="character-avatar arjun-avatar"><i class="fas fa-hand-holding-heart"></i></div>
+                        <div class="character-name">Arjun</div>
+                    </div>
+                    <div class="character-option" data-character="neha" onclick="setMoodCharacter('neha')">
+                        <div class="character-avatar neha-avatar"><i class="fas fa-seedling"></i></div>
+                        <div class="character-name">Neha</div>
+                    </div>
+                    <div class="character-option" data-character="sam" onclick="setMoodCharacter('sam')">
+                        <div class="character-avatar sam-avatar"><i class="fas fa-star"></i></div>
+                        <div class="character-name">Sam</div>
+                    </div>
+                </div>
+            </div>
             
             <!-- AI Mood Detection Section -->
             <div class="mood-detection-section" style="background: url('images/ai-mood.jpg') center center/cover no-repeat, #222;">
@@ -269,6 +294,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script src="js/mood.js"></script>
     <script>

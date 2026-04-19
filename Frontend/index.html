@@ -221,6 +221,32 @@
         </div>
     </section>
 
+    <!-- Character Companion Section -->
+    <div class="character-selector-card index-companion-card" style="margin: 40px auto; max-width: 1200px;">
+        <div class="character-selector-header">
+            <h3 id="index-companion-title">Meet Your Wellness Companion</h3>
+            <p id="index-companion-msg">Choose a companion to guide you through your mental wellness journey</p>
+        </div>
+        <div class="character-grid compact">
+            <div class="character-option active" data-character="aya" onclick="setCharacter('aya', event)">
+                <div class="character-avatar aya-avatar"><i class="fas fa-feather-alt"></i></div>
+                <div class="character-name">Aya</div>
+            </div>
+            <div class="character-option" data-character="arjun" onclick="setCharacter('arjun', event)">
+                <div class="character-avatar arjun-avatar"><i class="fas fa-spa"></i></div>
+                <div class="character-name">Arjun</div>
+            </div>
+            <div class="character-option" data-character="neha" onclick="setCharacter('neha', event)">
+                <div class="character-avatar neha-avatar"><i class="fas fa-leaf"></i></div>
+                <div class="character-name">Neha</div>
+            </div>
+            <div class="character-option" data-character="sam" onclick="setCharacter('sam', event)">
+                <div class="character-avatar sam-avatar"><i class="fas fa-sun"></i></div>
+                <div class="character-name">Sam</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Links Section -->
     <section id="services" class="quick-links">
         <div class="container">
@@ -1399,6 +1425,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
     <script src="js/script.js"></script>
     <script src="js/chatbot.js"></script>
 </body>

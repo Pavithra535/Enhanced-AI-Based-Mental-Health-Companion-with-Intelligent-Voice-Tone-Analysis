@@ -38,6 +38,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const welcomeTime = document.getElementById('welcome-time');
     const voiceInputBtn = document.getElementById('voice-input-btn');
     const toggleSpeechBtn = document.getElementById('toggle-speech-btn');
+    const chatTitle = document.getElementById('chat-title');
+    const welcomeHeading = document.getElementById('welcome-heading');
+    const presenceName = document.getElementById('presence-name');
+    const presenceRole = document.getElementById('presence-role');
+    const presenceMessage = document.getElementById('presence-message');
+    const presenceVibe = document.getElementById('presence-vibe');
+    const presenceAvatar = document.getElementById('presence-avatar');
+    const companionPresenceCard = document.querySelector('.companion-presence-card');
+    const presenceAvatarIcon = document.getElementById('presence-avatar-icon');
+    const sidebarAvatarIcon = document.getElementById('sidebar-avatar-icon');
+    const sidebarCompanionName = document.getElementById('sidebar-companion-name');
+    const sidebarCompanionRole = document.getElementById('sidebar-companion-role');
     
     // Variables
     let currentMood = null;
@@ -48,8 +60,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let recognition;
     let isListening = false;
     let autoSendTimer = null;
+    let hasTriggeredImmediateCrisisFlow = false;
+    /** Voice tone analysis (Web Audio) — samples captured while mic is active */
+    let voiceToneStream = null;
+    let voiceToneAudioContext = null;
+    let voiceToneAnalyser = null;
+    let voiceToneRafId = null;
+    let voiceToneSamples = { rms: [], centroid: [] };
+    let lastVoiceToneProfile = null;
+    const VOICE_TONE_MIN_SAMPLES = 24;
     const MAX_MEMORY_TURNS = 10; // Last 10 messages
     const currentUserName = getCurrentUserName();
+    const selectedCompanion = getCompanionProfileData();
     
     // Initialize the page
     initializePage();
@@ -61,6 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to initialize the page
     async function initializePage() {
+        initializeCompanionPersona();
+
         // Check and update mood status
         await checkMoodStatus();
         
@@ -120,6 +144,268 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 'Friend';
     }
+
+    function getCompanionProfileData() {
+        const fallback = {
+            name: 'Soul Companion',
+            role: 'Emotionally aware support partner',
+            icon: 'fa-user-astronaut',
+            color: 'linear-gradient(135deg, #8b5cf6, #22d3ee)',
+            greeting: null
+        };
+
+        if (typeof currentCharacterData !== 'undefined' && currentCharacterData) {
+            return {
+                ...fallback,
+                ...currentCharacterData
+            };
+        }
+
+        if (typeof characterProfiles !== 'undefined' && characterProfiles) {
+            const savedKey = localStorage.getItem('selectedCharacter') || 'aya';
+            if (characterProfiles[savedKey]) {
+                return {
+                    ...fallback,
+                    ...characterProfiles[savedKey]
+                };
+            }
+        }
+
+        return fallback;
+    }
+
+    function initializeCompanionPersona() {
+        if (presenceName) presenceName.textContent = selectedCompanion.name;
+        if (presenceRole) presenceRole.textContent = selectedCompanion.role;
+        if (sidebarCompanionName) sidebarCompanionName.textContent = selectedCompanion.name;
+        if (sidebarCompanionRole) sidebarCompanionRole.textContent = selectedCompanion.role;
+        if (chatTitle) chatTitle.textContent = `${selectedCompanion.name} Chat`;
+
+        if (presenceAvatar && selectedCompanion.color) {
+            presenceAvatar.style.background = selectedCompanion.color;
+        }
+
+        const iconClass = `fas ${selectedCompanion.icon || 'fa-user-astronaut'}`;
+        if (presenceAvatarIcon) presenceAvatarIcon.className = iconClass;
+        if (sidebarAvatarIcon) sidebarAvatarIcon.className = iconClass;
+
+        let greetingText = `Hello! I am ${selectedCompanion.name}, your Soul Space companion`;
+        if (typeof selectedCompanion.greeting === 'function') {
+            greetingText = selectedCompanion.greeting(currentUserName);
+        }
+
+        if (welcomeHeading) welcomeHeading.textContent = greetingText;
+        setPresenceState('ready', 'I am here with you. Start with how your day felt emotionally.', 'Warm');
+    }
+
+    function setPresenceState(state, text, vibeText) {
+        if (presenceMessage && text) {
+            presenceMessage.textContent = text;
+        }
+        if (presenceVibe && vibeText) {
+            presenceVibe.textContent = vibeText;
+        }
+        if (companionPresenceCard) {
+            companionPresenceCard.classList.remove('is-listening', 'is-thinking', 'is-soothing', 'is-happy', 'is-guide');
+            if (state === 'listening') companionPresenceCard.classList.add('is-listening');
+            if (state === 'thinking') companionPresenceCard.classList.add('is-thinking');
+            if (state === 'soothing') companionPresenceCard.classList.add('is-soothing');
+            if (state === 'happy') companionPresenceCard.classList.add('is-happy');
+            if (state === 'guide') companionPresenceCard.classList.add('is-guide');
+        }
+        if (presenceAvatar) {
+            presenceAvatar.style.transform = state === 'thinking' ? 'scale(1.05)' : 'scale(1)';
+        }
+    }
+
+    function getMoodReactionFromText(inputText) {
+        const text = (inputText || '').toLowerCase();
+        if (!text) return null;
+
+        const soothingTriggers = ['depressive', 'depressed', 'depression', 'sad', 'lonely', 'hopeless', 'down'];
+        const happyTriggers = ['happy', 'great', 'excited', 'joy', 'awesome', 'amazing', 'good mood'];
+
+        if (soothingTriggers.some(word => text.includes(word))) {
+            return {
+                state: 'soothing',
+                message: 'I hear you. Let us slow down and breathe together. You are safe with me.',
+                vibe: 'Soothing'
+            };
+        }
+
+        if (happyTriggers.some(word => text.includes(word))) {
+            return {
+                state: 'happy',
+                message: 'I love this energy. Let us build on this positive moment together.',
+                vibe: 'Cheerful'
+            };
+        }
+
+        return {
+            state: 'ready',
+            message: 'I am with you. Keep sharing what you feel, one step at a time.',
+            vibe: 'Present'
+        };
+    }
+
+    function applyMessageMoodReaction(message) {
+        const reaction = getMoodReactionFromText(message);
+        if (!reaction) return;
+        setPresenceState(reaction.state, reaction.message, reaction.vibe);
+
+        // Immediate escalation for self-harm/death related language.
+        if (!hasTriggeredImmediateCrisisFlow && containsDeathRelatedLanguage(message)) {
+            hasTriggeredImmediateCrisisFlow = true;
+            requestLocationAndShowNearbySupport('chat-risk');
+        }
+    }
+
+    const voiceToneHintEl = document.getElementById('voice-tone-hint');
+
+    function setVoiceToneHint(text, visible = true) {
+        if (!voiceToneHintEl) return;
+        if (!visible || !text) {
+            voiceToneHintEl.textContent = '';
+            voiceToneHintEl.hidden = true;
+            return;
+        }
+        voiceToneHintEl.textContent = text;
+        voiceToneHintEl.hidden = false;
+    }
+
+    function classifyVoiceToneFromFeatures(avgRms, avgCentroidHz) {
+        const cNorm = Math.min(1, Math.max(0, avgCentroidHz / 4500));
+        if (avgRms > 0.12 && cNorm > 0.52) {
+            return { label: 'tense', apiTone: 'anxious', display: 'Tense / heightened' };
+        }
+        if (avgRms > 0.1 && cNorm > 0.48) {
+            return { label: 'stressed', apiTone: 'stressed', display: 'Strained / stressed' };
+        }
+        if (avgRms < 0.042) {
+            return { label: 'subdued', apiTone: 'sad', display: 'Soft / low energy' };
+        }
+        if (avgRms > 0.13 && cNorm < 0.42) {
+            return { label: 'energetic', apiTone: 'happy', display: 'Strong / expressive' };
+        }
+        if (avgRms < 0.065 && cNorm < 0.38) {
+            return { label: 'calm_soft', apiTone: 'neutral', display: 'Calm / gentle' };
+        }
+        return { label: 'neutral', apiTone: 'neutral', display: 'Balanced' };
+    }
+
+    function getVoiceToneSupportMessage(profile) {
+        const map = {
+            tense: 'From your voice, I sense some tension. That is completely understandable — we can slow down and breathe together whenever you are ready.',
+            stressed: 'Your voice sounds a bit strained. There is no rush; we can take this one small step at a time.',
+            subdued: 'You sound quiet or low in energy. Whatever you are feeling matters, and you do not have to go through it alone.',
+            energetic: 'I hear a lot of energy in how you are speaking. If you like, we can channel that into something steadying or uplifting.',
+            calm_soft: 'Your voice sounds calm and gentle. Thank you for sharing in a way that feels comfortable for you.',
+            neutral: 'Thanks for speaking — I am listening and here with you.'
+        };
+        return map[profile.label] || map.neutral;
+    }
+
+    async function startVoiceToneAnalysis(stream) {
+        stopVoiceToneAnalysis(false);
+        voiceToneSamples = { rms: [], centroid: [] };
+
+        const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextCtor) return;
+
+        try {
+            voiceToneAudioContext = new AudioContextCtor();
+            if (voiceToneAudioContext.state === 'suspended') {
+                await voiceToneAudioContext.resume();
+            }
+
+            const source = voiceToneAudioContext.createMediaStreamSource(stream);
+            voiceToneAnalyser = voiceToneAudioContext.createAnalyser();
+            voiceToneAnalyser.fftSize = 2048;
+            voiceToneAnalyser.smoothingTimeConstant = 0.75;
+            source.connect(voiceToneAnalyser);
+
+            const freqBins = voiceToneAnalyser.frequencyBinCount;
+            const freqData = new Uint8Array(freqBins);
+            const timeData = new Uint8Array(voiceToneAnalyser.fftSize);
+            const sr = voiceToneAudioContext.sampleRate;
+            const nyquist = sr / 2;
+
+            function sampleFrame() {
+                if (!voiceToneAnalyser || !voiceToneAudioContext) return;
+
+                voiceToneAnalyser.getByteTimeDomainData(timeData);
+                voiceToneAnalyser.getByteFrequencyData(freqData);
+
+                let sumSq = 0;
+                for (let i = 0; i < timeData.length; i++) {
+                    const v = (timeData[i] - 128) / 128;
+                    sumSq += v * v;
+                }
+                const rms = Math.sqrt(sumSq / timeData.length);
+
+                let weighted = 0;
+                let magSum = 0;
+                for (let i = 0; i < freqData.length; i++) {
+                    const f = (i / freqData.length) * nyquist;
+                    const mag = freqData[i];
+                    weighted += f * mag;
+                    magSum += mag;
+                }
+                const centroid = magSum > 1e-6 ? weighted / magSum : 0;
+
+                voiceToneSamples.rms.push(rms);
+                voiceToneSamples.centroid.push(centroid);
+
+                voiceToneRafId = requestAnimationFrame(sampleFrame);
+            }
+
+            voiceToneRafId = requestAnimationFrame(sampleFrame);
+            setVoiceToneHint('Listening to your voice tone…', true);
+        } catch (e) {
+            console.warn('Voice tone analysis unavailable:', e);
+        }
+    }
+
+    function finalizeVoiceToneProfile() {
+        if (!voiceToneSamples.rms.length || voiceToneSamples.rms.length < VOICE_TONE_MIN_SAMPLES) {
+            return null;
+        }
+        const n = voiceToneSamples.rms.length;
+        const avgRms = voiceToneSamples.rms.reduce((a, b) => a + b, 0) / n;
+        const avgCent = voiceToneSamples.centroid.reduce((a, b) => a + b, 0) / n;
+        return classifyVoiceToneFromFeatures(avgRms, avgCent);
+    }
+
+    function stopVoiceToneAnalysis(stopStream) {
+        if (voiceToneRafId != null) {
+            cancelAnimationFrame(voiceToneRafId);
+            voiceToneRafId = null;
+        }
+        voiceToneAnalyser = null;
+
+        if (voiceToneAudioContext) {
+            voiceToneAudioContext.close().catch(() => {});
+            voiceToneAudioContext = null;
+        }
+
+        if (stopStream && voiceToneStream) {
+            voiceToneStream.getTracks().forEach(track => track.stop());
+            voiceToneStream = null;
+        }
+    }
+
+    function applyVoiceToneInsight(profile, hadTranscript) {
+        if (!profile) return;
+        lastVoiceToneProfile = profile;
+        window.voiceDerivedTone = profile.apiTone;
+        setVoiceToneHint(`Voice tone: ${profile.display}`, true);
+        const supportMsg = getVoiceToneSupportMessage(profile);
+        if (hadTranscript) {
+            addMessage(supportMsg, 'ai', null, { skipSpeech: true });
+        }
+        const shortPresence = supportMsg.length > 130 ? `${supportMsg.slice(0, 127)}…` : supportMsg;
+        setPresenceState('ready', shortPresence, profile.display);
+    }
     
     // Function to check mood status
     async function checkMoodStatus() {
@@ -155,6 +441,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (['disgust'].includes(moodLabel)) {
                         moodStatusPill.classList.add('error');
                     }
+                }
+
+                if (isDepressiveMoodLabel(data.data.label)) {
+                    requestLocationAndShowNearbySupport('mood-risk');
                 }
             } else {
                 // No recent mood
@@ -198,6 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCharCount();
             updateSendButton();
             autoResizeTextarea();
+            applyMessageMoodReaction(chatInput.value);
         });
         
         chatInput.addEventListener('keypress', function(e) {
@@ -230,6 +521,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (toggleChatBtn) {
             toggleChatBtn.addEventListener('click', toggleChat);
         }
+
+        document.addEventListener('companion-guide-opened', function(event) {
+            const guideTitle = event?.detail?.title || 'this guide';
+            setPresenceState('guide', `Great choice. I will stay with you while you explore "${guideTitle}".`, 'Focused');
+            addMessage(`Nice choice. I opened "${guideTitle}" for you. After reading it, tell me what resonated and I will guide you next.`, 'ai');
+        });
     }
     
     // Function to set up speech recognition and synthesis
@@ -305,12 +602,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (aiStatus) {
                     aiStatus.textContent = 'Listening for your voice...';
                 }
+                setPresenceState('listening', 'I am listening closely. Speak naturally, I am with you.', 'Listening');
             };
 
             recognition.onend = () => {
                 isListening = false;
                 voiceInputBtn.classList.remove('listening');
                 voiceInputBtn.title = 'Use voice input';
+
+                const profile = finalizeVoiceToneProfile();
+                const hadTranscript = chatInput.value.trim().length > 0;
+                stopVoiceToneAnalysis(true);
+
+                if (profile && hadTranscript) {
+                    applyVoiceToneInsight(profile, true);
+                } else if (profile && !hadTranscript) {
+                    setVoiceToneHint(`Voice activity noted (${profile.display}). Speech was not recognized — try again or type your message.`, true);
+                    window.voiceDerivedTone = '';
+                    lastVoiceToneProfile = null;
+                } else {
+                    setVoiceToneHint('', false);
+                    window.voiceDerivedTone = '';
+                }
                 
                 // Restore AI status
                 const aiStatus = document.getElementById('ai-status');
@@ -319,6 +632,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         aiStatus.textContent = `Ready to help with your ${currentMood.label.toLowerCase()} mood`;
                     } else {
                         aiStatus.textContent = 'Ready to help you';
+                    }
+                }
+                if (!(profile && hadTranscript)) {
+                    if (profile && !hadTranscript) {
+                        setPresenceState('ready', 'I did not catch your words clearly. I am still here — try speaking again or type below.', 'Present');
+                    } else {
+                        setPresenceState('ready', 'Thank you for sharing. I am ready when you are.', 'Present');
                     }
                 }
                 
@@ -350,6 +670,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Speech recognition error:', event.error);
                 isListening = false;
                 voiceInputBtn.classList.remove('listening');
+                stopVoiceToneAnalysis(true);
+                setVoiceToneHint('', false);
+                window.voiceDerivedTone = '';
                 
                 let errorMessage = 'Speech recognition error occurred.';
                 
@@ -397,17 +720,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to request microphone permission and start listening
     async function requestMicrophoneAndStartListening() {
         try {
-            // Request microphone permission
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            
-            // Permission granted, stop the stream and start speech recognition
-            stream.getTracks().forEach(track => track.stop());
-            
-            // Update button appearance to show permission granted
+            voiceToneStream = stream;
+
             voiceInputBtn.style.opacity = '1';
             voiceInputBtn.title = 'Use voice input';
-            
-            // Start listening
+
+            await startVoiceToneAnalysis(stream);
             startListening();
             
         } catch (error) {
@@ -417,6 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update button to show permission needed
             voiceInputBtn.style.opacity = '0.5';
             voiceInputBtn.title = 'Microphone access required - click to grant permission';
+            setVoiceToneHint('', false);
         }
     }
 
@@ -459,6 +779,8 @@ document.addEventListener('DOMContentLoaded', function() {
             recognition.start();
         } catch (error) {
             console.error('Error starting recognition:', error);
+            stopVoiceToneAnalysis(true);
+            setVoiceToneHint('', false);
             showError('Failed to start voice recognition. Please try again.');
         }
     }
@@ -548,9 +870,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Cancel auto-send timer since we're manually sending
         cancelAutoSendTimer();
+
+        const detectedToneForRequest = getDetectedTone();
+        window.voiceDerivedTone = '';
         
         // Add user message to chat
         addMessage(message, 'user');
+        applyMessageMoodReaction(message);
+        setPresenceState('thinking', 'Thank you for trusting me. I am reflecting on what you shared...', 'Thinking');
         
         // Clear input
         chatInput.value = '';
@@ -565,6 +892,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (checkEmergencyKeywords(message)) {
             hideTypingIndicator();
             addEmergencyResponse();
+            await requestLocationAndShowNearbySupport('chat-risk');
             return;
         }
         
@@ -574,8 +902,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Generate AI response
         try {
             console.log('Generating AI response for message:', message);
-            const detectedTone = getDetectedTone();
-            const aiData = await generateAIResponse(message, detectedTone);
+            const aiData = await generateAIResponse(message, detectedToneForRequest);
             hideTypingIndicator();
             
             // Score matrum text-a thani thaniya vaanguroom
@@ -597,7 +924,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
  // Moondravathu parameter 'vaderScore' add pannirukoom
-    function addMessage(text, sender, vaderScore = null) {
+    function addMessage(text, sender, vaderScore = null, options = {}) {
+        const skipSpeech = Boolean(options.skipSpeech);
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}-message`;
         
@@ -614,7 +942,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formattedText += `<br><br><span style="display: block; border-top: 1px solid #eee; padding-top: 5px; color: #888; font-size: 11px; font-style: italic;">VADER Sentiment: ${safeScore.toFixed(3)}</span>`;
             }
 
-            if (isSpeechEnabled && window.speechSynthesis) {
+            if (isSpeechEnabled && window.speechSynthesis && !skipSpeech) {
                 speakText(text); // Text-a mattum read pannum, score-a read pannaathu
             }
         } else {
@@ -623,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         messageDiv.innerHTML = `
             <div class="message-avatar">
-                <i class="fas ${sender === 'user' ? 'fa-user' : 'fa-robot'}"></i>
+                <i class="fas ${sender === 'user' ? 'fa-user' : (selectedCompanion.icon || 'fa-user-astronaut')}"></i>
             </div>
             <div class="message-content">
                 <div class="message-text">${formattedText}</div>
@@ -641,6 +969,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         saveConversationHistory();
+
+        if (sender === 'ai') {
+            setPresenceState('ready', 'I am here. Want to go deeper or shift to practical steps?', 'Reflective');
+        }
     }
     
     // Function to speak text using SpeechSynthesis
@@ -959,6 +1291,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showTypingIndicator() {
         isTyping = true;
         typingIndicator.classList.add('show');
+        setPresenceState('thinking', `${selectedCompanion.name} is composing a thoughtful response...`, 'Thinking');
         updateSendButton();
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -967,6 +1300,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function hideTypingIndicator() {
         isTyping = false;
         typingIndicator.classList.remove('show');
+        setPresenceState('ready', 'I am ready to continue whenever you are.', 'Supportive');
         updateSendButton();
     }
     
@@ -975,11 +1309,106 @@ document.addEventListener('DOMContentLoaded', function() {
         const emergencyKeywords = [
             'suicide', 'kill myself', 'end my life', 'want to die', 'self harm', 'hurt myself',
             'cut myself', 'overdose', 'jump off', 'hang myself', 'not worth living',
-            'better off dead', 'end it all', 'can\'t go on'
+            'better off dead', 'end it all', 'can\'t go on', 'death', 'die', 'dead'
         ];
         
         const lowerMessage = message.toLowerCase();
         return emergencyKeywords.some(keyword => lowerMessage.includes(keyword));
+    }
+
+    function containsDeathRelatedLanguage(message) {
+        if (!message) return false;
+        const deathKeywords = [
+            'death', 'die', 'dead', 'suicide', 'kill myself', 'end my life',
+            'want to die', 'self harm', 'hurt myself', 'better off dead'
+        ];
+        const lowered = message.toLowerCase();
+        return deathKeywords.some(keyword => lowered.includes(keyword));
+    }
+
+    function isDepressiveMoodLabel(label) {
+        if (!label) return false;
+        const lowered = String(label).toLowerCase();
+        return lowered.includes('depress') || lowered.includes('sad');
+    }
+
+    async function requestLocationAndShowNearbySupport(triggerSource) {
+        try {
+            if (!navigator.geolocation) {
+                addNearbySupportMessage(null, null, triggerSource);
+                return;
+            }
+
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 60000
+                });
+            });
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            addNearbySupportMessage(lat, lon, triggerSource);
+        } catch (error) {
+            console.error('Could not access location for crisis flow:', error);
+            addNearbySupportMessage(null, null, triggerSource);
+        }
+    }
+
+    function addNearbySupportMessage(lat, lon, triggerSource = 'unknown') {
+        const hasLocation = Number.isFinite(lat) && Number.isFinite(lon);
+        const crisisIntro = triggerSource === 'mood-risk'
+            ? 'Your recent mood seems depressive/high-risk. Let us connect you to nearby support now.'
+            : 'I noticed language related to death/self-harm. Let us connect you to nearby support now.';
+
+        const googleMapsBase = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('counselling center near me')}&query_place_id=&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/counselling+center+near+me';
+
+        const mentalHealthSearch = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('mental health clinic near me')}&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/mental+health+clinic+near+me';
+
+        const psychiatristSearch = hasLocation
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('psychiatrist near me')}&center=${lat},${lon}`
+            : 'https://www.google.com/maps/search/psychiatrist+near+me';
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message ai-message';
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas ${selectedCompanion.icon || 'fa-user-astronaut'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-text emergency-response">
+                    <h4><i class="fas fa-location-dot"></i> Nearby Help Suggestions</h4>
+                    <p>${crisisIntro}</p>
+                    <div class="emergency-actions">
+                        <a href="${googleMapsBase}" target="_blank" rel="noopener noreferrer" class="emergency-btn">
+                            <i class="fas fa-map-marker-alt"></i> Nearby Counselling Centers
+                        </a>
+                        <a href="${mentalHealthSearch}" target="_blank" rel="noopener noreferrer" class="emergency-btn">
+                            <i class="fas fa-hospital-user"></i> Nearby Mental Health Clinics
+                        </a>
+                        <a href="${psychiatristSearch}" target="_blank" rel="noopener noreferrer" class="emergency-btn">
+                            <i class="fas fa-user-md"></i> Nearby Psychiatrists
+                        </a>
+                        <a href="tel:9152987821" class="emergency-btn">
+                            <i class="fas fa-phone"></i> Call Crisis Helpline: 9152987821
+                        </a>
+                    </div>
+                    <p style="margin-top: 12px; font-size: 13px;">
+                        ${hasLocation ? 'Location was used only to show nearby options.' : 'Location unavailable - showing general nearby searches.'}
+                    </p>
+                </div>
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+            </div>
+        `;
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        setPresenceState('soothing', 'I am here with you. Please reach nearby professional support now.', 'Urgent Care');
     }
     
     // Function to add emergency response
@@ -1007,7 +1436,7 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.className = 'message ai-message';
         messageDiv.innerHTML = `
             <div class="message-avatar">
-                <i class="fas fa-robot"></i>
+                <i class="fas ${selectedCompanion.icon || 'fa-user-astronaut'}"></i>
             </div>
             <div class="message-content">
                 ${emergencyHTML}
@@ -1306,6 +1735,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentMood) {
             context += `User's current mood: ${currentMood.label}. `;
         }
+
+        if (lastVoiceToneProfile && lastVoiceToneProfile.display) {
+            context += `Estimated voice tone from recent speech: ${lastVoiceToneProfile.display}. `;
+        }
         
         // Add conversation history context (last 3 messages)
         const recentHistory = conversationHistory.slice(-6); // Last 3 exchanges
@@ -1341,6 +1774,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getDetectedTone() {
+        if (typeof window.voiceDerivedTone === 'string' && window.voiceDerivedTone.trim().length > 0) {
+            return window.voiceDerivedTone.trim();
+        }
+
         if (typeof window.detectedTone === 'string' && window.detectedTone.trim().length > 0) {
             return window.detectedTone.trim();
         }
@@ -1510,7 +1947,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     messageDiv.innerHTML = `
                         <div class="message-avatar">
-                            <i class="fas ${msg.sender === 'user' ? 'fa-user' : 'fa-robot'}"></i>
+                            <i class="fas ${msg.sender === 'user' ? 'fa-user' : (selectedCompanion.icon || 'fa-user-astronaut')}"></i>
                         </div>
                         <div class="message-content">
                             <div class="message-text">${msg.text}</div>
@@ -1856,6 +2293,12 @@ function playAudioInPanel(thumbnail, audioSrc, title) {
 }
 
 function openGuide(guideSrc, title) {
+    document.dispatchEvent(new CustomEvent('companion-guide-opened', {
+        detail: {
+            title: title || 'Guide'
+        }
+    }));
+
     // Open guide in new tab/window
     window.open(guideSrc, '_blank');
 }
